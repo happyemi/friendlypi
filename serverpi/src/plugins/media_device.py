@@ -16,18 +16,25 @@
 name = "mediadevice"
 _path_to_directory = "/media/usb"
 
+import os.path
+
 def get_status():
-	media_status = False
+	media_status = os.path.ismount(_path_to_directory)
 	value = "Unmounted"
-	actions = ("Mount",)
+	actions =  ("Mount",)
 	
 	if media_status:
-		value = "mounted"
+		value = "Mounted"
 		actions = ("Unmount",)
 			
-	return {"text": _path_to_directory, "value:": value, "actions": actions }
-	
+	return {"text": "MediaDevice for " + _path_to_directory, "value": value, "actions": actions }
+
+
 def exec_command(command):
-	print(command)
+	from subprocess import call
+	if command == "Unmount":
+		call(["umount", _path_to_directory])
+	elif command == "Mount":
+		call(["mount", _path_to_directory])
 
 
