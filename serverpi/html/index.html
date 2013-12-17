@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>FriendlyPi</title>
+    <style>
+		body { background-color:#FFFFCC; }
+	</style>
+  </head>
+  <body>
+ 		{% for plugin in plugins %}    
+      		{{plugin["text"]}}<br> 
+      		Value: {{plugin["value"]}} <br>
+      		{% for action in plugin["actions"] %}      		
+	      		<span style="float:left;">
+	    			<form action="/command/{{ plugin["name"] }}/{{ action }}">           
+	        			<input type="submit" value="{{ action }}">  
+	    			</form>   
+				</span>
+      		{% end %}
+      		<br><br><hr>
+      	{% end %}
+  </body>
+</html>

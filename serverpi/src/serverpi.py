@@ -26,7 +26,7 @@ class PluginHandler(tornado.web.RequestHandler):
 		
 	def get(self, command):
 		self.plugin.exec_command(command)
-
+		self.redirect("/status", True)
 		
 class StatusHandler(tornado.web.RequestHandler):
 	"Handles status updates"
@@ -39,7 +39,8 @@ class StatusHandler(tornado.web.RequestHandler):
 				result = {}
 			result["name"] = plugin.name
 			ret.append(result)
-		self.write(str(ret))
+		self.render("index.html", plugins = ret)
+
 
 def prepare_plugin_handlers():
 	handlers = []
@@ -47,9 +48,10 @@ def prepare_plugin_handlers():
 		handlers.append((r"/command/" + plugin_name + r"/(.*)", PluginHandler, dict(plugin = plugins.plugin_map[plugin_name])))
 	return handlers
 
+settings = { "template_path": "../html/" }
 
 handlers = [(r"/status", StatusHandler)]
 handlers.extend(prepare_plugin_handlers())
-application = tornado.web.Application(handlers)
+application = tornado.web.Application(handlers, **settings)
 application.listen(8080)
 tornado.ioloop.IOLoop.instance().start()
