@@ -1,3 +1,5 @@
+#     Copyright 2013-2014 Emiliano Mennucci
+#
 #     This file is part of FriendlyPi.
 # 
 #     FriendlyPi is free software: you can redistribute it and/or modify
@@ -13,28 +15,31 @@
 #     You should have received a copy of the GNU General Public License
 #     along with FriendlyPi.  If not, see <http://www.gnu.org/licenses/>.
 
-name = "mediadevice"
-_path_to_directory = "/media/usb"
-
+from friendlyutils.modutils import module
 import os.path
 
-def get_status():
-	media_status = os.path.ismount(_path_to_directory)
-	value = "Unmounted"
-	actions =  ("Mount",)
+@module
+class MediaDevice:
+
+	def __init__(self, params):
+		self._path = params["path"]
+
+	def get_status(self):
+		media_status = os.path.ismount(self._path)
+		value = "Unmounted"
+		actions =  ("Mount",)
+		
+		if media_status:
+			value = "Mounted"
+			actions = ("Unmount",)
+				
+		return {"text": "MediaDevice for " + self._path, "value": value, "actions": actions }
 	
-	if media_status:
-		value = "Mounted"
-		actions = ("Unmount",)
-			
-	return {"text": "MediaDevice for " + _path_to_directory, "value": value, "actions": actions }
-
-
-def exec_command(command):
-	from subprocess import call
-	if command == "Unmount":
-		call(["umount", _path_to_directory])
-	elif command == "Mount":
-		call(["mount", _path_to_directory])
+	def exec_command(self, command):
+		from subprocess import call
+		if command == "Unmount":
+			call(["umount", self._path])
+		elif command == "Mount":
+			call(["mount", self._path])
 
 

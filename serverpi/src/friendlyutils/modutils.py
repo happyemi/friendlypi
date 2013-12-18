@@ -15,11 +15,9 @@
 #     You should have received a copy of the GNU General Public License
 #     along with FriendlyPi.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import glob
-import importlib
+mod_list = []
 
-names = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(os.path.dirname(__file__), "*.py")) if "__init__" not in f]
-for p in names:
-    mod_name = __name__ + "." + p
-    module = importlib.import_module(mod_name)
+def module(class_name):
+    "Registers a class as a friendlypi module"
+    mod_list.append(class_name)
+    return class_name

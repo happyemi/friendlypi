@@ -1,3 +1,5 @@
+#     Copyright 2013-2014 Emiliano Mennucci
+#
 #     This file is part of FriendlyPi.
 # 
 #     FriendlyPi is free software: you can redistribute it and/or modify
@@ -16,16 +18,41 @@
 import tornado.ioloop
 import tornado.web
 
-import plugins
+# Import plugins files
+plugins_dir = "plugins"
+import importlib
+importlib.import_module(plugins_dir)
+
+def create_instances(config_file, modules):
+	"""
+	Reads config_file and returns a list of tuple with the following structure:
+		[(name1, obj1), (name2, obj2)...]
+	where 'name' is the name of the module instance, and 'obj' is an instance of the class 
+	specified in the config file
+	"""
+	instances = []
+	import json
+	data = open(config_file)
+	content = json.load(data)
+	for name, module, params in content:
+		pymod_name, class_name = module.split(".")
+		pymod = importlib.import_module(plugins_dir + "." + pymod_name)
+		class_obj = getattr(pymod, class_name)
+		instances.append((name, class_obj(params)))
+	return instances
+
+# Create module objects (instances)
+import friendlyutils.modutils
+mod_instances = create_instances("friendlypi.json", friendlyutils.modutils.mod_list)
 
 class PluginHandler(tornado.web.RequestHandler):
 	"Handles plugin commands"		
 	
-	def initialize(self, plugin):
-		self.plugin = plugin
+	def initialize(self, mod_instance):
+		self.mod_instance = mod_instance
 		
 	def get(self, command):
-		self.plugin.exec_command(command)
+		self.mod_instance.exec_command(command)
 		self.redirect("/status", True)
 		
 class StatusHandler(tornado.web.RequestHandler):
@@ -33,19 +60,19 @@ class StatusHandler(tornado.web.RequestHandler):
 	
 	def get(self):
 		ret = []
-		for plugin in plugins.plugin_list:
-			result = plugin.get_status()
+		for m, o in mod_instances:
+			result = o.get_status()
 			if not result:
 				result = {}
-			result["name"] = plugin.name
+			result["name"] = m
 			ret.append(result)
 		self.render("index.html", plugins = ret)
 
 
 def prepare_plugin_handlers():
 	handlers = []
-	for plugin_name in plugins.plugin_map:
-		handlers.append((r"/command/" + plugin_name + r"/(.*)", PluginHandler, dict(plugin = plugins.plugin_map[plugin_name])))
+	for m, o in mod_instances:
+		handlers.append((r"/command/" + m + r"/(.*)", PluginHandler, dict(mod_instance = o)))
 	return handlers
 
 settings = { "template_path": "../html/" }
