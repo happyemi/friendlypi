@@ -27,19 +27,19 @@ class MediaDevice:
 	def get_status(self):
 		media_status = os.path.ismount(self._path)
 		value = "Unmounted"
-		actions =  ("Mount",)
+		actions =  [{"id": "mount", "label": "Mount"}]
 		
 		if media_status:
 			value = "Mounted"
-			actions = ("Unmount",)
+			actions =  [{"id": "umount", "label": "Umount"}]
 				
-		return {"text": "MediaDevice for " + self._path, "value": value, "actions": actions }
+		return {"caption": "MediaDevice for " + self._path, "status": value, "actions": actions }
 	
 	def exec_command(self, command):
 		from subprocess import call
-		if command == "Unmount":
+		if command == "umount":
 			call(["umount", self._path])
-		elif command == "Mount":
+		elif command == "mount":
 			call(["mount", self._path])
 
 

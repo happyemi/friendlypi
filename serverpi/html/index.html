@@ -7,12 +7,12 @@
   </head>
   <body>
  		{% for plugin in plugins %}    
-      		{{plugin["text"]}}<br> 
-      		Value: {{plugin["value"]}} <br>
+      		{{plugin["caption"]}}<br> 
+      		Status: {{plugin["status"]}} <br>
       		{% for action in plugin["actions"] %}      		
 	      		<span style="float:left;">
-	    			<form action="/command/{{ plugin["name"] }}/{{ action }}">           
-	        			<input type="submit" value="{{ action }}">  
+	    			<form action="/command/{{ plugin["name"] }}/{{ action["id"] }}">           
+	        			<input type="submit" value="{{ action["label"] }}">  
 	    			</form>   
 				</span>
       		{% end %}
