@@ -45,6 +45,19 @@ def create_instances(config_file, modules):
 import friendlyutils.modutils
 mod_instances = create_instances("friendlypi.json", friendlyutils.modutils.mod_list)
 
+def get_status(mod_instances):
+	"Creates the JSON dictionary representing the status"
+	
+	ret = []
+	for m, o in mod_instances:
+		result = o.get_status()
+		if not result:
+			result = {}
+		result["name"] = m
+		ret.append(result)
+	ret = {"data": ret, "version": 0}
+	return ret
+
 class PluginHandler(tornado.web.RequestHandler):
 	"Handles plugin commands"		
 	
@@ -53,20 +66,20 @@ class PluginHandler(tornado.web.RequestHandler):
 		
 	def get(self, command):
 		self.mod_instance.exec_command(command)
-		self.redirect("/status", True)
+		if self.get_argument("html", "0") == "1":
+			self.redirect("/status?html=1", True)
+		else:
+			self.write(get_status(mod_instances))
 		
 class StatusHandler(tornado.web.RequestHandler):
 	"Handles status updates"
 	
 	def get(self):
-		ret = []
-		for m, o in mod_instances:
-			result = o.get_status()
-			if not result:
-				result = {}
-			result["name"] = m
-			ret.append(result)
-		self.render("index.html", plugins = ret)
+		status = get_status(mod_instances)
+		if self.get_argument("html", "0") == "1":
+			self.render("index.html", plugins = status["data"])
+		else:
+			self.write(status)
 
 
 def prepare_plugin_handlers():

@@ -11,7 +11,8 @@
       		Status: {{plugin["status"]}} <br>
       		{% for action in plugin["actions"] %}      		
 	      		<span style="float:left;">
-	    			<form action="/command/{{ plugin["name"] }}/{{ action["id"] }}">           
+	    			<form action="/command/{{ plugin["name"] }}/{{ action["id"] }}">
+	    				<input type="hidden" name="html" value="1">           
 	        			<input type="submit" value="{{ action["label"] }}">  
 	    			</form>   
 				</span>
