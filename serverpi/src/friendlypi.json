@@ -1,1 +1,3 @@
-[["media1", "media_device.MediaDevice", {"path": "/media/usb"}]]
+[["media1", "media_device.MediaDevice", {"path": "/media/usb"}],
+["test1", "test.TestMod", {}]
+]
