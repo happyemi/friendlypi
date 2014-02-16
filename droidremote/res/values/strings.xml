@@ -3,5 +3,6 @@
 
     <string name="app_name">Friendlypi</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_refresh">Refresh</string>
 
 </resources>

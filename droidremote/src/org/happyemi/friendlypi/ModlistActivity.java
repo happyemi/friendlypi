@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
+import android.view.MenuItem;
 
 import android.widget.*;
 import java.util.*;
@@ -128,6 +129,20 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_modlist, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		switch (item.getItemId())
+		{
+		case R.id.menu_refresh:
+			new FetchStatus(this).execute();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 }
