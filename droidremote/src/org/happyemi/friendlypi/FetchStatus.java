@@ -29,17 +29,19 @@ import java.net.*;
 public class FetchStatus extends AsyncTask<Void, Void, String>
 {
 	private StatusChangeListener listener;
+	private String urlString;
 	
 	FetchStatus(StatusChangeListener listener)
 	{
 		this.listener = listener;
+		urlString = FriendlypiApplication.getInstance().getServerUrl() + "/status";
 	}
 	
 	protected String doInBackground(Void... params) 
 	{		
 		try 
 		{
-			URL url = new URL("http://10.0.2.2:8080/status");
+			URL url = new URL(urlString);
 			BufferedReader buf = new BufferedReader(new InputStreamReader(url.openStream()));
 			return buf.readLine();
 		}

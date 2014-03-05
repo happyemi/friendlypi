@@ -4,5 +4,32 @@
     <string name="app_name">Friendlypi</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="pref_host">Host</string>
+    <string name="pref_key_host">host</string>
+    <string name="pref_key_port">port</string>
+    <string name="pref_port">Port</string>
+    <string name="pref_default_port">8080</string>
+    <string name="pref_key_update">update</string>
+    <string name="pref_update">Refresh Interval</string>
+    <string-array name="pref_items_update">
+        <item >1 Minute</item>
+        <item >2 Minutes</item>
+        <item >5 Minutes</item>
+        <item >10 Minutes</item>
+        <item >20 Minutes</item>
+        <item >30 Minutes</item>
+        <item >1 Hour</item>
+        <item >Never</item>
+    </string-array>
+    <string-array name="pref_itemsid_update">
+        <item >60</item>
+        <item >120</item>
+        <item >300</item>
+        <item >600</item>
+        <item >1200</item>
+        <item >1800</item>
+        <item >3600</item>
+        <item >0</item>
+    </string-array>
 
 </resources>

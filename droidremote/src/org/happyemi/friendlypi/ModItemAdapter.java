@@ -31,26 +31,26 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 
+
 class ActionClickListener implements View.OnClickListener
 {
 	private class SendCommand extends AsyncTask<Void, Void, String>
 	{
 		private StatusChangeListener listener;
-		private String instance;
-		private String actionId;
+		private String urlString;
 		
 		SendCommand(StatusChangeListener listener, String instance, String actionId)
 		{
-			this.instance = instance;
-			this.actionId = actionId;
 			this.listener = listener;
+			urlString = FriendlypiApplication.getInstance().getServerUrl() + "/command/" + 
+					instance + "/" + actionId;
 		}
 		
 		protected String doInBackground(Void... params) 
 		{		
 			try 
 			{
-				URL url = new URL("http://10.0.2.2:8080/command/" + instance + "/" + actionId);
+				URL url = new URL(urlString);
 				BufferedReader buf = new BufferedReader(new InputStreamReader(url.openStream()));
 				return buf.readLine();
 			}

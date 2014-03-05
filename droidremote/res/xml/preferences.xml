@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="@string/menu_refresh" android:title="@string/menu_settings">
+    <EditTextPreference android:dialogTitle="@string/pref_host" android:title="@string/pref_host" android:key="@string/pref_key_host"/>        
+    <EditTextPreference android:dialogTitle="@string/pref_port" android:title="@string/pref_port" android:key="@string/pref_key_port" android:defaultValue="@string/pref_default_port" android:numeric="signed"/>
+    <ListPreference android:entries="@array/pref_items_update" android:entryValues="@array/pref_itemsid_update" android:key="@string/pref_key_update" android:title="@string/pref_update" android:defaultValue="0"/>
+</PreferenceScreen>

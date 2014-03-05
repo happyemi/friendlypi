@@ -22,6 +22,7 @@ package org.happyemi.friendlypi;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
@@ -41,7 +42,6 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 	private class FetchStatusTimer implements Runnable
 	{
 		StatusChangeListener listener;
-		private final int FETCH_STATUS_DELAY = 5000;
 
 		FetchStatusTimer(StatusChangeListener listener)
 		{
@@ -64,7 +64,11 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 		@Override
 		public void run() 
 		{
-			handler.postDelayed(this, FETCH_STATUS_DELAY);
+			int refreshIntervalSecs = FriendlypiApplication.getInstance().getRefreshIntervalSecs();
+			if(refreshIntervalSecs != 0)
+			{
+				handler.postDelayed(this, refreshIntervalSecs * 1000);
+			}
 			new FetchStatus(listener).execute();
 		}
 	}
@@ -75,7 +79,7 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		
 		setContentView(R.layout.modlist_activity);
 
 		// Configure the main list
@@ -84,6 +88,7 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 		listView.setAdapter(adapter);
 
 		fetchStatusTimer = new FetchStatusTimer(this);
+
 	}
 
 	@Override
@@ -139,6 +144,10 @@ public class ModlistActivity extends Activity implements StatusChangeListener
 		{
 		case R.id.menu_refresh:
 			new FetchStatus(this).execute();
+			return true;
+		case R.id.menu_settings:
+			Intent intent = new Intent(this, PreferenceActivity.class);
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
