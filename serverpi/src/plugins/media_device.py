@@ -15,14 +15,12 @@
 #     You should have received a copy of the GNU General Public License
 #     along with FriendlyPi.  If not, see <http://www.gnu.org/licenses/>.
 
-from friendlyutils.modutils import module
 import os.path
 
-@module
 class MediaDevice:
 
-	def __init__(self, params):
-		self._path = params["path"]
+	def __init__(self, config):
+		self._path = config["path"]
 
 	def get_status(self):
 		media_status = os.path.ismount(self._path)

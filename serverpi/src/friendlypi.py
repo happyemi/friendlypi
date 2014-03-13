@@ -18,10 +18,10 @@
 import tornado.ioloop
 import tornado.web
 
-# Import plugins files
-plugins_dir = "plugins"
-import importlib
-importlib.import_module(plugins_dir)
+modules = {}
+from pkg_resources import iter_entry_points, resource_filename, Requirement
+for plugin in iter_entry_points('org.happyemi.friendlypi'):
+	modules[plugin.name] = plugin.load()
 
 def create_instances(config_file, modules):
 	"""
@@ -34,16 +34,12 @@ def create_instances(config_file, modules):
 	import json
 	data = open(config_file)
 	content = json.load(data)
-	for name, module, params in content:
-		pymod_name, class_name = module.split(".")
-		pymod = importlib.import_module(plugins_dir + "." + pymod_name)
-		class_obj = getattr(pymod, class_name)
-		instances.append((name, class_obj(params)))
+	for instance_name, module_name, config in content:
+		instances.append((instance_name, modules[module_name](config)))
 	return instances
 
 # Create module objects (instances)
-import friendlyutils.modutils
-mod_instances = create_instances("friendlypi.json", friendlyutils.modutils.mod_list)
+mod_instances = create_instances("/etc/friendlypi.json", modules)
 
 def get_status(mod_instances):
 	"Creates the JSON dictionary representing the status"
@@ -88,7 +84,9 @@ def prepare_plugin_handlers():
 		handlers.append((r"/command/" + m + r"/(.*)", PluginHandler, dict(mod_instance = o)))
 	return handlers
 
-settings = { "template_path": "../html/" }
+
+html_path = resource_filename(Requirement.parse("FriendlyPi"), "html")
+settings = { "template_path": html_path}
 
 handlers = [(r"/status", StatusHandler)]
 handlers.extend(prepare_plugin_handlers())

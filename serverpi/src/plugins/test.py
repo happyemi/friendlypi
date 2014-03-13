@@ -15,12 +15,9 @@
 #     You should have received a copy of the GNU General Public License
 #     along with FriendlyPi.  If not, see <http://www.gnu.org/licenses/>.
 
-from friendlyutils.modutils import module
-
-@module
 class TestMod:
 
-	def __init__(self, params):
+	def __init__(self, config):
 		self.value = 0
 
 	def get_status(self):
