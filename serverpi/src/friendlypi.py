@@ -41,6 +41,10 @@ def create_instances(config_file, modules):
 # Create module objects (instances)
 mod_instances = create_instances("/etc/friendlypi.json", modules)
 
+def get_time():
+	import time
+	return str(int(time.time() * 10))
+
 def get_status(mod_instances):
 	"Creates the JSON dictionary representing the status"
 	
@@ -63,7 +67,7 @@ class PluginHandler(tornado.web.RequestHandler):
 	def get(self, command):
 		self.mod_instance.exec_command(command)
 		if self.get_argument("html", "0") == "1":
-			self.redirect("/status?html=1", True)
+			self.redirect("/status?html=1&cachebuster=" + get_time(), True)
 		else:
 			self.write(get_status(mod_instances))
 		
@@ -73,7 +77,7 @@ class StatusHandler(tornado.web.RequestHandler):
 	def get(self):
 		status = get_status(mod_instances)
 		if self.get_argument("html", "0") == "1":
-			self.render("index.html", plugins = status["data"])
+			self.render("index.html", plugins = status["data"], cachebuster = get_time())
 		else:
 			self.write(status)
 
