@@ -1,0 +1,3 @@
+include default_plugins.ini
+recursive-include html *.html
+include LICENSE
