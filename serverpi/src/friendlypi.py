@@ -23,23 +23,31 @@ from pkg_resources import iter_entry_points, resource_filename, Requirement
 for plugin in iter_entry_points('org.happyemi.friendlypi'):
 	modules[plugin.name] = plugin.load()
 
-def create_instances(config_file, modules):
+def create_instances(settings, modules):
 	"""
-	Reads config_file and returns a list of tuple with the following structure:
+	Parse 'settings' and returns a list of tuples with the following structure:
 		[(name1, obj1), (name2, obj2)...]
-	where 'name' is the name of the module instance, and 'obj' is an instance of the class 
-	specified in the config file
+	where 'name' is the name of the module instance, and 'obj' is the instance
 	"""
 	instances = []
-	import json
-	data = open(config_file)
-	content = json.load(data)
-	for instance_name, module_name, config in content:
+	for instance_name, module_name, config in settings:
 		instances.append((instance_name, modules[module_name](config)))
 	return instances
 
+# Read config file
+import json
+config_file = open("/etc/friendlypi.json")
+config = json.load(config_file)
+config_file.close()
+del config_file
+
 # Create module objects (instances)
-mod_instances = create_instances("/etc/friendlypi.json", modules)
+mod_instances = create_instances(config["instances"], modules)
+
+# Set port
+port = 8080
+if 'port' in config:
+	port = config["port"]
 
 def get_time():
 	import time
@@ -95,5 +103,5 @@ settings = { "template_path": html_path}
 handlers = [(r"/status", StatusHandler)]
 handlers.extend(prepare_plugin_handlers())
 application = tornado.web.Application(handlers, **settings)
-application.listen(8080)
+application.listen(port)
 tornado.ioloop.IOLoop.instance().start()
