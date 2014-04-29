@@ -62,6 +62,21 @@ The MediaDevice module allows users to remotely mount/umount mount points. In or
     }
 
 
+Configure the ServiceManager module
+-----------------------------------
+
+The ServiceManager module allows users to remotely start/stop services. In order for this to work the Unix user that runs the server must have the proper permissions to execute the "service" command, like this one::
+
+    service samba start
+
+Configuring a service manager, requires two things: the service name (e.g. "samba") and the pid file (e.g. "/var/run/samba/smbd.pid"). A valid configuration would look like this::
+
+    {
+    "instances": [["service1", "ServiceManager", {"service": "samba", "pid_file": "/var/run/samba/smbd.pid"}]]
+    }
+
+It's possible to configure multiple service managers, in the very same way described in the MediaDevice case
+
 Disclaimer
 ----------
 
@@ -74,3 +89,4 @@ Changes
 0.1d1
 -----
 - Server port is now configurable
+- Added ServiceManager module
