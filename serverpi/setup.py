@@ -20,7 +20,7 @@ from setuptools import setup
 entry_points_file = open('default_plugins.ini', 'rt')
 
 setup(name='FriendlyPi',
-version='0.1d0',
+version='0.1d1',
 description = 'FriendlyPi server',
 long_description = open('README.rst').read(),
 author = 'Emiliano Mennucci',
