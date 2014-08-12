@@ -42,7 +42,7 @@ The server runs on port 8080 by default. It's possible to set a different value 
 Testing the server
 ------------------
 
-Once the server has been setup, start it manually. Start your preferred browser and point it to 127.0.0.1:8080/status?html=1  (of course replace the loopback address and the port with the real values, if different). If everything has been done properly, the browser should show you an instance of the test module running. An increment button is present and pressing it will increment the "Status" value.
+Once the server has been setup, start it manually. Start your preferred browser and point it to 127.0.0.1:8080/status?html=1  (of course replace the loopback address and the port with the real values, if different). If everything has been done properly, the browser should show you an instance of the test module running. An increment and a decrement button should allow you to update the "Status" value.
 
 
 Configure the MediaDevice module

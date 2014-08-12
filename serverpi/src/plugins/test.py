@@ -21,8 +21,11 @@ class TestMod:
 		self.value = 0
 
 	def get_status(self):
-		actions = [{"id": "inc", "label": "Increment"}]
+		actions = [{"id": "inc", "label": "Increment"}, {"id": "dec", "label": "Decrement"}]
 		return {"caption": "Test module", "status": str(self.value), "actions": actions }
 	
 	def exec_command(self, command):
-		self.value += 1
+		if command == "inc":
+			self.value += 1
+		else:
+			self.value -= 1;
